@@ -1,28 +1,31 @@
-// strategy.ts
 import { Task } from "@/types/task";
 
 interface SortStrategy {
   sort(tasks: Task[]): Task[];
 }
 
-export class SortByTitle implements SortStrategy {
+class BaseSortStrategy implements SortStrategy {
+  constructor(private comparator: (a: Task, b: Task) => number) {}
+
   sort(tasks: Task[]): Task[] {
-    return [...tasks].sort((a, b) => a.title.localeCompare(b.title));
+    return [...tasks].sort(this.comparator);
   }
 }
 
-export class SortByCompletion implements SortStrategy {
-  sort(tasks: Task[]): Task[] {
-    return [...tasks].sort((a, b) => Number(a.completed) - Number(b.completed));
+export class SortByTitle extends BaseSortStrategy {
+  constructor() {
+    super((a, b) => a.title.localeCompare(b.title));
+  }
+}
+
+export class SortByCompletion extends BaseSortStrategy {
+  constructor() {
+    super((a, b) => Number(a.completed) - Number(b.completed));
   }
 }
 
 export class TaskSorter {
-  private strategy: SortStrategy;
-
-  constructor(strategy: SortStrategy) {
-    this.strategy = strategy;
-  }
+  constructor(private strategy: SortStrategy) {}
 
   setStrategy(strategy: SortStrategy) {
     this.strategy = strategy;

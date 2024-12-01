@@ -1,4 +1,3 @@
-// commands.ts
 import { Task, TaskAction, TaskActions } from "@/types/task";
 import { Dispatch } from "react";
 import { commands_subject } from "./observer";
@@ -11,51 +10,38 @@ export interface Command<T extends TaskAction> {
   undo(dispatch: Dispatch<TaskActions>): void;
 }
 
-export class AddTaskCommand implements Command<TaskAction.ADD> {
-  action: TaskAction.ADD = TaskAction.ADD;
-  undo_action = TaskAction.REMOVE;
-
-  constructor(public task: Task) {}
+class BaseTaskCommand<T extends TaskAction> implements Command<T> {
+  constructor(
+    public task: Task,
+    public action: T,
+    public undo_action: TaskAction
+  ) {}
 
   execute(dispatch: Dispatch<TaskActions>) {
-    dispatch({ type: TaskAction.ADD, payload: this.task });
+    dispatch({ type: this.action, payload: this.task });
     commands_subject.next(this);
   }
 
   undo(dispatch: Dispatch<TaskActions>) {
-    dispatch({ type: TaskAction.REMOVE, payload: this.task });
+    dispatch({ type: this.undo_action, payload: this.task });
   }
 }
 
-export class RemoveTaskCommand implements Command<TaskAction.REMOVE> {
-  action: TaskAction.REMOVE = TaskAction.REMOVE;
-  undo_action = TaskAction.ADD;
-
-  constructor(public task: Task) {}
-
-  execute(dispatch: Dispatch<TaskActions>) {
-    dispatch({ type: TaskAction.REMOVE, payload: this.task });
-    commands_subject.next(this);
-  }
-
-  undo(dispatch: Dispatch<TaskActions>) {
-    dispatch({ type: TaskAction.ADD, payload: this.task });
+export class AddTaskCommand extends BaseTaskCommand<TaskAction.ADD> {
+  constructor(task: Task) {
+    super(task, TaskAction.ADD, TaskAction.REMOVE);
   }
 }
 
-export class ToggleTaskCommand implements Command<TaskAction.TOGGLE> {
-  action: TaskAction.TOGGLE = TaskAction.TOGGLE;
-  undo_action = TaskAction.TOGGLE;
-
-  constructor(public task: Task) {}
-
-  execute(dispatch: Dispatch<TaskActions>) {
-    dispatch({ type: TaskAction.TOGGLE, payload: this.task });
-    commands_subject.next(this);
+export class RemoveTaskCommand extends BaseTaskCommand<TaskAction.REMOVE> {
+  constructor(task: Task) {
+    super(task, TaskAction.REMOVE, TaskAction.ADD);
   }
+}
 
-  undo(dispatch: Dispatch<TaskActions>) {
-    this.execute(dispatch);
+export class ToggleTaskCommand extends BaseTaskCommand<TaskAction.TOGGLE> {
+  constructor(task: Task) {
+    super(task, TaskAction.TOGGLE, TaskAction.TOGGLE);
   }
 }
 

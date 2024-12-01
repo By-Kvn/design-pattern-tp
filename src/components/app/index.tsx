@@ -103,104 +103,105 @@ export const App = () => {
 
   return (
     <>
-      <main className="flex flex-col items-center justify-center w-screen h-screen bg-gray-50 p-8 overflow-hidden">
+      <main className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800 p-8 overflow-hidden">
         <h1 className="text-4xl font-extrabold text-blue-600 mb-8">
           My todo List
         </h1>
 
-        <div className="flex flex-col md:flex-row gap-8 flex-1 w-full max-w-6xl bg-white rounded-xl shadow-lg p-6">
-          {/* Section Form */}
-          <div className="flex flex-col gap-6 w-full md:w-1/3 border-r border-gray-200 pr-6">
-            <h2 className="text-xl font-semibold text-gray-800">Nouvelle tâche</h2>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex flex-col gap-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">
-                        Titre
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Titre"
-                          {...field}
-                          className="border-gray-300 rounded-md shadow-sm"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+  <div className="flex flex-col md:flex-row gap-8 flex-1 w-full max-w-6xl bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-6">
+  {/* Section Form */}
+  <div className="flex flex-col gap-6 w-full md:w-1/3 border-r border-gray-200 pr-6">
+    <h2 className="text-xl font-semibold text-white">Nouvelle tâche</h2>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4"
+      >
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm font-medium text-white">
+                Nom
+              </FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Nom de la tâche"
+                  {...field}
+                  className="border-gray-300 rounded-md shadow-sm"
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">
-                        Description
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Description"
-                          {...field}
-                          className="border-gray-300 rounded-md shadow-sm"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm font-medium text-white">
+                Description
+              </FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Description"
+                  {...field}
+                  className="border-gray-300 rounded-md shadow-sm"
                 />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-                <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">
-                  Ajouter
-                </Button>
-              </form>
-            </Form>
-          </div>
+        <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">
+          Ajouter
+        </Button>
+      </form>
+    </Form>
+  </div>
 
-          {/* Section Liste */}
-          <div className="flex flex-col flex-1 gap-6">
-            <div className="flex justify-between items-center">
-              <Select onValueChange={onSorterChange}>
-                <SelectTrigger className="w-[180px] border-gray-300">
-                  <SelectValue placeholder="Trier les tâches" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Ne pas trier</SelectItem>
-                  <SelectItem value="title">Ordre alphabétique</SelectItem>
-                  <SelectItem value="completion">Statut de complétion</SelectItem>
-                </SelectContent>
-              </Select>
+  {/* Section Liste */}
+  <div className="flex flex-col flex-1 gap-6">
+    <div className="flex justify-between items-center">
+      <Select onValueChange={onSorterChange}>
+        <SelectTrigger className="w-[180px] border-gray-300">
+          <SelectValue placeholder="Trier les tâches" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="none">Ne pas trier</SelectItem>
+          <SelectItem value="title">Ordre alphabétique</SelectItem>
+          <SelectItem value="completion">Statut de complétion</SelectItem>
+        </SelectContent>
+      </Select>
 
-              <TooltipProvider>
-                <Tooltip delayDuration={100}>
-                  <TooltipTrigger>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="border-gray-300 hover:border-gray-400"
-                      onClick={undo}
-                      disabled={!undo}
-                    >
-                      <RiArrowGoBackLine />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Annuler la dernière action</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+      <TooltipProvider>
+        <Tooltip delayDuration={100}>
+          <TooltipTrigger>
+            <Button
+              size="icon"
+              variant="outline"
+              className="border-gray-300 hover:border-gray-400"
+              onClick={undo}
+              disabled={!undo}
+            >
+              <RiArrowGoBackLine />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Annuler la dernière action</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
 
-            <TaskList tasks={state} sorter={sorter} dispatch={dispatch} />
-          </div>
-        </div>
+    <TaskList tasks={state} sorter={sorter} dispatch={dispatch} />
+  </div>
+</div>
+
       </main>
 
       <Notifications />
